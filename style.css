@@ -1,24 +1,56 @@
 @import url('https://fonts.googleapis.com/css?family=Spartan');
 
-* {
+*,
+*::before,
+*::after{
     box-sizing: border-box;
 }
 
+:root {
+    --bodyBack: hsl(222, 26%, 31%);
+    --bodyColor: hsl(221, 14%, 31%);
+    --ingriBack: hsl(223, 31%, 20%);
+    --inpredBack: hsl(6, 63%, 50%);
+    --screenBack: hsl(224, 36%, 15%);
+    --grivBack: hsl(30, 25%, 89%);
+    --whiteColor: hsl(0, 0%, 100%);
+    --blueColor: hsl(225, 21%, 49%);
+    --redShadow: hsl(6, 70%, 34%);
+    --blueShadow: hsl(224, 28%, 35%);
+    --gShadow: hsl(28, 16%, 65%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ingriBack: hsl(0, 73%, 15%);
+        --screenBack: hsl(0, 73%, 15%);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --ingriBack: hsl(194, 45%, 15%);
+        --screenBack: hsl(194, 45%, 15%);
+    }
+}
+
 body {
-    background-color: hsl(222, 26%, 31%);
+    background-color: var(--bodyBack);
     font-family: 'Spartan';
-    color: hsl(221, 14%, 31%);
+    color: var(--bodyColor);
+    font-weight: 700;
+    user-select: none;
 }
 
 .container {
-    margin: auto;
+    margin: 40px auto 0;
     width: 220px;
 }
 
 .top {
     width: 100%;
-    height: 30px;
-    line-height: 30px;
+    height: 35px;
+    line-height: 31px;
     font-size: 12px;
     position: relative;
 }
@@ -31,18 +63,40 @@ body {
     float: right;
     width: 30%;
     height: 100%;
-    font-size: 6px;
-    position: relative;
+    font-size: 8px;
+}
+
+span {
+    float: left;
+    font-size: 7px;
+}
+
+.theme_controller {
+    height: 100%;
+    float: right;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    float: right;
+    padding: 0 3px;
+    height: 10px;
+    line-height: 10px;
 }
 
 input[type='checkbox'] {
-    margin: 8px -1px 0 0;
+    margin: 0;
     float: right;
-    appearance: none;
     position: relative;
+    appearance: none;
     width: 30px;
     height: 10px;
-    background: hsl(223, 31%, 20%);
+    background: var(--ingriBack);
     outline: none;
     border-radius: 20px;
 }
@@ -51,18 +105,28 @@ input[type='checkbox']:before {
     content: '';
     position: absolute;
     top: 2px;
-    left: 3px;
-    background: hsl(6, 63%, 50%);
     width: 6px;
     height: 6px;
     border-radius: 50%;
+    transition: left .2s;
     /* transform: scale(1.6); */
-    transition: left .5s;
 }
 
-input[type='checkbox']:hover:before {
+input[type='checkbox'].theme1:before {
+    left: 2px;
+    background: var(--inpredBack);
+}
+
+input[type='checkbox'].theme2:before {
     left: 50%;
     transform: translateX(-50%);
+    background: var(--inpredBack);
+}
+
+input[type='checkbox'].theme3:before {
+    left: 95%;
+    transform: translateX(-95%);
+    background: var(--inpredBack);
 }
 
 .screen {
@@ -72,23 +136,25 @@ input[type='checkbox']:hover:before {
     border-radius: 3px;
     text-align: right;
     line-height: 58px;
-    padding-right: 10px;
-    font-size: 32px;
-    background-color: hsl(224, 36%, 15%);
+    padding-right: 14px;
+    font-size: 22px;
+    background-color: var(--screenBack);
     margin-bottom: 12px;
+    overflow: hidden;
 }
 
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 10px;
-    background-color: hsl(223, 31%, 20%);
-    padding: 10px;
+    background-color: var(--ingriBack);
+    padding: 14px;
     border-radius: 3px;
 }
 
 .grid-container > div {
-    background-color: hsl(30, 25%, 89%);
+    background-color: var(--grivBack);
+    box-shadow: 0 2px 1px var(--gShadow);
     text-align: center;
     padding: 5px 0;
     border-radius: 3px;
@@ -107,29 +173,162 @@ input[type='checkbox']:hover:before {
 }
 
 .white {
-    color: hsl(0, 0%, 100%) !important;
+    color: var(--whiteColor) !important;
     font-weight: bold;
 }
 
 .blue {
-    background-color: hsl(225, 21%, 49%) !important;
+    background-color: var(--blueColor) !important;
+    box-shadow: 0 2px 1px var(--blueShadow) !important;
     font-size: 10px !important;
 }
 
 .red {
-    background-color: hsl(6, 63%, 50%) !important;
+    background-color: var(--inpredBack) !important;
+    box-shadow: 0 2px 1px var(--redShadow) !important;
     font-size: 10px !important;
 }
 
 .attribution {
-    font-size: 12px;
+    font-size: 10px;
+    margin: 12px auto 0;
+    width: 380px;
+    color: hsl(228, 45%, 74%);
     text-align: center;
-    margin-top: 15px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-60%);
 }
 
-.attribution a {
-    color: hsl(228, 45%, 74%);
+a {
+    color: var(--redShadow);
+    margin-left: 7px;
+    font-size: 12px;
+}
+
+a:first-child {
+    margin-right: 4px;
+}
+
+a:last-child {
+    text-decoration: none;
+}
+
+.common {
+    color: var(--bodyColor);
+}
+
+@media only screen and (max-width: 400px) {
+    .container {
+        margin: auto;
+        width: 95%;
+        height: 520px;
+    }
+
+    .top {
+        height: 80px;
+        line-height: 70px;
+        font-size: 26px;
+    }
+
+    .theme {
+        width: 40%;
+        font-size: 8px;
+    }
+
+    span {
+        font-size: 9px;
+    }
+
+    .theme_controller {
+        width: 70%;
+    }
+    
+    ul {
+        height: 100%;
+    }
+    
+    ul li {
+        padding: 13px 11px 0;
+        height: 20px;
+        line-height: 10px;
+        font-size: 9px;
+    }
+
+    input[type='checkbox'] {
+        width: 75px;
+        height: 22px;
+        position: absolute;
+        top: 32%;
+        right: 1%;
+    }
+    
+    input[type='checkbox']:before {
+        top: 4px;
+        width: 14px;
+        height: 14px;
+    }
+    
+    input[type='checkbox'].theme1:before {
+        left: 3px;
+    }
+    
+    input[type='checkbox'].theme2:before {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    input[type='checkbox'].theme3:before {
+        left: 95%;
+        transform: translateX(-95%);
+    }
+
+    .screen {
+        height: 70px;
+        border-radius: 8px;
+        line-height: 78px;
+        margin-bottom: 18px;
+        font-size: 34px;
+        padding-right: 22px;
+    }
+
+    .grid-container {
+        padding: 18px;
+        height: 350px;
+        border-radius: 8px;
+    }
+    
+    .grid-container > div {
+        height: 50px;
+        line-height: 46px;
+        width: 62px;
+        font-size: 24px;
+        margin: auto;
+        box-shadow: 0 4px 2px var(--gShadow);
+    }
+
+    .item2 {
+        width: 98% !important;
+    }
+    
+    .item3 {
+        width: 98% !important;
+    }
+    
+    .blue {
+        box-shadow: 0 4px 2px var(--blueShadow) !important;
+        font-size: 16px !important;
+    }
+    
+    .red {
+        box-shadow: 0 4px 2px var(--redShadow) !important;
+        font-size: 16px !important;
+    }
+
+    .attribution {
+        font-size: 8px;
+        width: 90%;
+    }
+
+    a {
+        font-size: 10px;
+        margin-left: 5px;
+    }
 }

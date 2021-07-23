@@ -1,11 +1,17 @@
 
 
 // Tá dando erro com o undefined
+//olhar o moz-
+//tentar fazer o metodo vma sei la
+// falta fazer o desafio
+
 
 // Global variables
 const screen = document.querySelector('.screen');
 const board = document.querySelector('.grid-container');
-const themeButton = document.querySelector('#theme1');
+const themeButton = document.querySelector('input');
+const r = document.querySelector(':root');
+const toppper = document.querySelector('.top');
 let keys1 = [];
 let keys2 = [];
 let operators = [];
@@ -75,6 +81,21 @@ board.addEventListener('click', (e) => {
             dotOperator.classList.add("number2");
         }
         outcome = [];
+    }
+
+    // Limits size of keys1
+    if(keys1.length > 9 && operators.length == 0) {
+        keys1.pop();
+    }
+
+    // Limits size of keys2
+    if(keys2.length > 9) {
+        keys2.pop();
+    }
+
+    // Moving screen to the latest number tapped
+    if(screen.scrollWidth > 220) {
+        screen.scrollLeft = screen.scrollWidth;
     }
 
     // Controlling the minus operator
@@ -180,8 +201,19 @@ board.addEventListener('click', (e) => {
         }
     }
 
+    let keys1_comma = hasComma(keys1);
+    let keys2_comma = hasComma(keys2);
+
     // Gathers all 3 arrays into one and shows in screen
-    screenView = [...keys1, ...operators, ...keys2];
+    if(keys1_comma && keys2_comma) {
+        screenView = [...keys1_comma, ...operators, ...keys2_comma];
+    } else if(keys1_comma && !keys2_comma) {
+        screenView = [...keys1_comma, ...operators, ...keys2];
+    } else if(!keys1_comma && keys2_comma) {
+        screenView = [...keys1, ...operators, ...keys2_comma];
+    } else {
+        screenView = [...keys1, ...operators, ...keys2];
+    }
     screen.innerHTML = screenView.join('');
 
     // Controls what classes belongs to dotOperator
@@ -196,10 +228,24 @@ board.addEventListener('click', (e) => {
     }
 });
 
+// Including commas if number is longer than 3 digits
+function hasComma(array) {
+    if(!array.includes('.') && !array.includes('-')) {
+        if(array.length > 3) {
+            return [Number(array.join('')).toLocaleString('en')];
+        }
+    }
+    if(array.includes('-')) {
+        if(array.length > 4) {
+            return [Number(array.join('')).toLocaleString('en')];
+        }
+    }
+}
+
 // Controls delete button
 function deletion() {
     const dotOperator = document.getElementsByClassName('dot')[0];
-    if(keys2[0]){
+    if(keys2.length > 0){
         let is_dot2 = keys2.pop();
         if(is_dot2 == '.') {
             dotOperator.classList.add("number2");
@@ -242,7 +288,7 @@ function result() {
             switch(operation) {
                 case '+':
                     output = num1 + num2;
-                    if(output.toString().length > 6) {
+                    if(output.toString().length > 16) {
                         outcome = [output.toPrecision(3)];
                     } else {
                         outcome = [output];
@@ -250,7 +296,7 @@ function result() {
                     break;
                 case '-':
                     output = num1 - num2; 
-                    if(output.toString().length > 6) {
+                    if(output.toString().length > 16) {
                         outcome = [output.toPrecision(3)];
                     } else {
                         outcome = [output];
@@ -258,11 +304,12 @@ function result() {
                     break;
                 case 'x':
                     output = num1 * num2; 
-                    if(output.toString().length > 6) {
+                    if(output.toString().length > 16) {
                         outcome = [output.toPrecision(3)];
                     } else {
                         outcome = [output];
                     }
+                    console.log(output);
                     break;
                 case '/':
                     output = num1 / num2;
@@ -270,7 +317,7 @@ function result() {
                         reset();
                         return
                     }   
-                    if(output.toString().length > 6) {
+                    if(output.toString().length > 16) {
                         outcome = [output.toPrecision(3)];
                     } else {
                         outcome = [output];
@@ -288,5 +335,70 @@ function result() {
 
 // Controlling the theme
 themeButton.addEventListener('click', () => {
-    console.log('theme1');
+    const equal = document.getElementsByClassName('item3')[0];;
+
+    if(themeButton.className == 'theme1') {
+        themeButton.className = '';
+        themeButton.classList.add('theme2');
+
+        r.style.setProperty('--bodyBack', 'hsl(0, 0%, 90%)');
+        r.style.setProperty('--bodyColor', 'hsl(60, 10%, 19%)');
+        r.style.setProperty('--ingriBack', 'hsl(0, 5%, 81%)');
+        r.style.setProperty('--inpredBack', 'hsl(25, 98%, 40%)');
+        r.style.setProperty('--screenBack', 'hsl(0, 0%, 93%)');
+        r.style.setProperty('--grivBack', 'hsl(45, 7%, 89%)');
+        r.style.setProperty('--whiteColor', 'hsl(0, 0%, 100%)');
+        r.style.setProperty('--blueColor', 'hsl(185, 42%, 37%)');
+        r.style.setProperty('--redShadow', 'hsl(25, 99%, 27%)');
+        r.style.setProperty('--blueShadow', 'hsl(185, 58%, 25%)');
+        r.style.setProperty('--gShadow', 'hsl(35, 11%, 61%)');
+
+        toppper.classList.remove('white');
+        toppper.classList.add('common');
+
+        screen.classList.remove('white');
+        screen.classList.add('common');
+
+    } else if(themeButton.className == 'theme2') {
+        themeButton.className = '';
+        themeButton.classList.add('theme3');
+
+        r.style.setProperty('--bodyBack', 'hsl(268, 75%, 9%)');
+        r.style.setProperty('--bodyColor', 'hsl(52, 100%, 62%)');
+        r.style.setProperty('--ingriBack', 'hsl(268, 71%, 12%)');
+        r.style.setProperty('--inpredBack', 'hsl(176, 100%, 44%)');
+        r.style.setProperty('--screenBack', 'hsl(268, 71%, 12%)');
+        r.style.setProperty('--grivBack', 'hsl(268, 47%, 21%)');
+        r.style.setProperty('--whiteColor', 'hsl(0, 0%, 100%)');
+        r.style.setProperty('--blueColor', 'hsl(281, 89%, 26%)');
+        r.style.setProperty('--redShadow', 'hsl(177, 92%, 70%)');
+        r.style.setProperty('--blueShadow', 'hsl(285, 91%, 52%)');
+        r.style.setProperty('--gShadow', 'hsl(290, 70%, 36%)');
+
+        equal.classList.remove('white');
+        equal.style.color = 'hsl(198, 20%, 13%)' ;
+
+    } else {
+        themeButton.className = '';
+        themeButton.classList.add('theme1');
+
+        r.style.setProperty('--bodyBack', 'hsl(222, 26%, 31%)');
+        r.style.setProperty('--bodyColor', 'hsl(221, 14%, 31%)');
+        r.style.setProperty('--ingriBack', 'hsl(223, 31%, 20%)');
+        r.style.setProperty('--inpredBack', 'hsl(6, 63%, 50%)');
+        r.style.setProperty('--screenBack', 'hsl(224, 36%, 15%)');
+        r.style.setProperty('--grivBack', 'hsl(30, 25%, 89%)');
+        r.style.setProperty('--whiteColor', 'hsl(0, 0%, 100%)');
+        r.style.setProperty('--blueColor', 'hsl(225, 21%, 49%)');
+        r.style.setProperty('--redShadow', 'hsl(6, 70%, 34%)');
+        r.style.setProperty('--blueShadow', 'hsl(224, 28%, 35%)');
+        r.style.setProperty('--gShadow', 'hsl(28, 16%, 65%)');
+
+        toppper.classList.remove('common');
+        toppper.classList.add('white');
+
+        screen.classList.remove('common');
+        screen.classList.add('white');
+        equal.classList.add('white');
+    }
 });
