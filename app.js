@@ -1,13 +1,14 @@
 
 
-// Tá dando erro com o undefined
 //olhar o moz-
 //tentar fazer o metodo vma sei la
-// falta fazer o desafio
+// fazer o readMe
 
 
 // Global variables
-const screen = document.querySelector('.screen');
+// const screen = document.querySelector('.screen');
+let previuos = document.querySelector('.previous');
+let current = document.querySelector('.current');
 const board = document.querySelector('.grid-container');
 const themeButton = document.querySelector('input');
 const r = document.querySelector(':root');
@@ -15,7 +16,7 @@ const toppper = document.querySelector('.top');
 let keys1 = [];
 let keys2 = [];
 let operators = [];
-let screenView = [];
+// let screenView = [];
 let key = '';
 let outcome = [];
 let output = '';
@@ -44,19 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="item3 red white" onclick="result()">=</div>`;
 });
 
-var dotOperator = document.getElementsByClassName('dot')[0];
-
-// Call every time a click happens
+// Triggered every time a click happens
 board.addEventListener('click', (e) => {
 
     const dotOperator = document.getElementsByClassName('dot')[0];
     key = e.target.innerHTML;
-    let classe = e.target.className;
-    let dot1_include = classe.includes('number1');
-    let dot2_include = classe.includes('number2');
+    let elementClass = e.target.className;
+    let hasNumber1 = elementClass.includes('number1');
+    let hasNumber2 = elementClass.includes('number2');
 
     // Inserts every outcome into keys1
-    if(outcome[0]) {
+    if(outcome.length > 0) {
         let treat = outcome[0].toString().split('');
         let numConvert = [];
         for (let i of treat) {
@@ -65,19 +64,12 @@ board.addEventListener('click', (e) => {
             }
             numConvert.push(i);
         }
-        let eCheck = numConvert.findIndex(res => {
-            return res == 'e';
-        });
-        if(eCheck == -1) {
-            keys1 = numConvert;
-        } else {
-            keys1 = [];
-        }
+        keys1 = numConvert;
         let dotContain = outcome[0].toString().includes('.');
-        if(!dot1_include && !dotContain) {
+        if(!hasNumber1 && !dotContain) {
             dotOperator.classList.add("number1");
         }
-        if(!dot2_include) {
+        if(!hasNumber2) {
             dotOperator.classList.add("number2");
         }
         outcome = [];
@@ -99,15 +91,20 @@ board.addEventListener('click', (e) => {
     }
 
     // Controlling the minus operator
-    if(keys1[0] == undefined) {
-        if(key == '-') {
-            keys1.push(key);
+    if(keys1[0] == undefined && key == '-') {
+        keys1.push(key);
+    }
+
+    // Controlling the 0 result
+    if(keys1[0] == 0 && elementClass == 'number' && keys1.length == 1) {
+        if(!operators[0]) {
+            keys1.pop();
         }
     } 
 
     // Controlling input for first number
-    if(!operators[0] && (classe == 'number' || dot1_include)) {
-        if(dot1_include) {
+    if(!operators[0] && (elementClass == 'number' || hasNumber1)) {
+        if(hasNumber1) {
             if(typeof(keys1[0]) == 'number') {
                 keys1.push(key);
             } else if(typeof(keys1[1]) == 'number') {
@@ -124,38 +121,36 @@ board.addEventListener('click', (e) => {
     }
 
     // Restricts only one dot for first number
-    let str1 = keys1.find(res => {
-        return res == '.';
-    });
-
-    if(str1 == '.') {
+    if(keys1.includes('.')) {
         let dot1 = document.getElementsByClassName('number1')[0];
         if(dot1) {
             dot1.classList.remove("number1");
         }
     }
 
-    // Checks if array operators is already empty
+    // Checks if operators remains empty
     let stringCheck = operators.find(res => {
         return typeof(res) == 'string';
     });
 
+    // Checks if keys1 has already a number
     let opCheck = keys1.findIndex(res => {
         return typeof(res) == 'number';
     });
 
+    // Checks if the dot in keys1 is not its last index
     let indexCheck = keys1.findIndex(res => {
         return res == '.';
     });
 
     // Controlling operator array
-    if(opCheck != -1 && classe == 'operator' && !keys2[0] && !stringCheck) {
+    if(opCheck != -1 && elementClass == 'operator' && !keys2[0] && !stringCheck) {
         if(typeof(keys1[0]) == 'number') {
             if(keys1[indexCheck + 1] != undefined) {
                 operators.push(key);
             }
         } else if(typeof(keys1[1]) == 'number') {
-            if(!str1) {
+            if(!keys1.includes('.')) {
                 operators.push(key);
             } else {
                 if(keys1[indexCheck + 1] != undefined) {
@@ -172,8 +167,8 @@ board.addEventListener('click', (e) => {
         }
     } 
 
-    if(operators[0] && (classe == 'number' || dot2_include)) {
-        if(dot2_include) {
+    if(operators.length > 0 && (elementClass == 'number' || hasNumber2)) {
+        if(hasNumber2) {
             if(typeof(keys2[0]) == 'number') {
                 keys2.push(key);
             } else if(typeof(keys2[1]) == 'number') {
@@ -190,43 +185,55 @@ board.addEventListener('click', (e) => {
     }
 
     // Restricts only one dot for second number
-    let str2 = keys2.find(res => {
-        return res == '.';
-    });
-
-    if(str2 == '.') {
+    if(keys2.includes('.')) {
         let dot2 = document.getElementsByClassName('number2')[0];
         if(dot2) {
             dot2.classList.remove("number2");
         }
     }
 
+    // Treatring the screen output
     let keys1_comma = hasComma(keys1);
     let keys2_comma = hasComma(keys2);
 
-    // Gathers all 3 arrays into one and shows in screen
-    if(keys1_comma && keys2_comma) {
-        screenView = [...keys1_comma, ...operators, ...keys2_comma];
-    } else if(keys1_comma && !keys2_comma) {
-        screenView = [...keys1_comma, ...operators, ...keys2];
-    } else if(!keys1_comma && keys2_comma) {
-        screenView = [...keys1, ...operators, ...keys2_comma];
-    } else {
-        screenView = [...keys1, ...operators, ...keys2];
+    if(keys1_comma == undefined) {
+        keys1_comma = [...keys1];
     }
-    screen.innerHTML = screenView.join('');
+
+    if(keys2_comma == undefined) {
+        keys2_comma = [...keys2];
+    }
+
+    // screenView = [...keys1_comma, ...operators, ...keys2_comma];
+    // screen.innerHTML = screenView.join('');
+
+    if(operators.length == 0) {
+        current.innerHTML = keys1_comma.join('');
+        previuos.innerHTML = '';
+    }
+
+    if(operators.length > 0 && keys2.length == 0 && current.innerHTML != '') {
+        previuos.innerHTML = current.innerHTML + operators[0];
+        current.innerHTML = '';
+    }
+
+    if(keys2.length > 0) {
+        current.innerHTML = keys2_comma.join('');
+    }
 
     // Controls what classes belongs to dotOperator
     if(keys1[0] == undefined) {
-        screen.innerHTML = 0;
-        if(!dot1_include) {
+        current.innerHTML = '';
+        if(!hasNumber1) {
             dotOperator.classList.add("number1");
         }
-        if(!dot2_include) {
+        if(!hasNumber2) {
             dotOperator.classList.add("number2");
         }
     }
 });
+
+
 
 // Including commas if number is longer than 3 digits
 function hasComma(array) {
@@ -271,7 +278,7 @@ function reset() {
     dotOperator.classList.add("number2");
 }
 
-// Deals with all equations on screen
+// Computes the math operations
 function result() {
 
     let numCheck = keys2.findIndex(res => {
@@ -288,28 +295,15 @@ function result() {
             switch(operation) {
                 case '+':
                     output = num1 + num2;
-                    if(output.toString().length > 16) {
-                        outcome = [output.toPrecision(3)];
-                    } else {
-                        outcome = [output];
-                    }
+                    outcome = resultFormat(output);
                     break;
                 case '-':
                     output = num1 - num2; 
-                    if(output.toString().length > 16) {
-                        outcome = [output.toPrecision(3)];
-                    } else {
-                        outcome = [output];
-                    }
+                    outcome = resultFormat(output);
                     break;
                 case 'x':
-                    output = num1 * num2; 
-                    if(output.toString().length > 16) {
-                        outcome = [output.toPrecision(3)];
-                    } else {
-                        outcome = [output];
-                    }
-                    console.log(output);
+                    output = num1 * num2;
+                    outcome = resultFormat(output);
                     break;
                 case '/':
                     output = num1 / num2;
@@ -317,19 +311,35 @@ function result() {
                         reset();
                         return
                     }   
-                    if(output.toString().length > 16) {
-                        outcome = [output.toPrecision(3)];
-                    } else {
-                        outcome = [output];
-                    }
+                    outcome = resultFormat(output);
                     break;
                 default:
                     console.log('An error has ocorred');
+                    return
             }
             keys1 = [];
             operators = [];
             keys2 = [];
         }
+    }
+}
+
+// Controls output's precision
+function resultFormat(output) {
+    if(output.toString().length > 12) {
+        if(output.toString().includes('e')) {
+            output = 0;
+            return [output];
+        }
+        if(output.toPrecision(3).includes('e')) {
+            return [output];
+        } else if(output > 1) {
+            return [output.toPrecision(3)];
+        } else {
+            return [output.toPrecision(2)];
+        }
+    } else {
+        return [output];
     }
 }
 
@@ -356,8 +366,8 @@ themeButton.addEventListener('click', () => {
         toppper.classList.remove('white');
         toppper.classList.add('common');
 
-        screen.classList.remove('white');
-        screen.classList.add('common');
+        current.classList.remove('white');
+        current.classList.add('common');
 
     } else if(themeButton.className == 'theme2') {
         themeButton.className = '';
@@ -397,8 +407,8 @@ themeButton.addEventListener('click', () => {
         toppper.classList.remove('common');
         toppper.classList.add('white');
 
-        screen.classList.remove('common');
-        screen.classList.add('white');
+        current.classList.remove('common');
+        current.classList.add('white');
         equal.classList.add('white');
     }
 });
