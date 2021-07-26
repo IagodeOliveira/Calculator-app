@@ -6,7 +6,10 @@
     box-sizing: border-box;
     font-family: 'Spartan';
     font-weight: 700;
-    user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
 
 :root {
@@ -27,13 +30,16 @@
     :root {
         --ingriBack: hsl(0, 73%, 15%);
         --screenBack: hsl(0, 73%, 15%);
+        --bodyBack: hsl(222, 26%, 5%);
     }
 }
 
 @media (prefers-color-scheme: light) {
     :root {
-        --ingriBack: hsl(194, 45%, 15%);
-        --screenBack: hsl(194, 45%, 15%);
+        --ingriBack: hsl(194, 45%, 40%);
+        --screenBack: hsl(194, 45%, 40%);
+        --bodyBack: hsl(194, 45%, 28%);
+        --whiteColor: hsl(0, 0%, 5%);
     }
 }
 
@@ -93,7 +99,9 @@ input[type='checkbox'] {
     margin: 0;
     float: right;
     position: relative;
-    appearance: none;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
     width: 30px;
     height: 10px;
     background: var(--ingriBack);
