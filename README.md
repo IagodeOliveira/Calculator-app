@@ -29,6 +29,7 @@ Users should be able to:
 ### Screenshot
 
 ![](./images/calculator1.jpg)
+
 ![](./images/calculator2.jpg)
 
 
