@@ -76,3 +76,4 @@ function resultFormat(output) {
         return [output];
     }
 }
+
